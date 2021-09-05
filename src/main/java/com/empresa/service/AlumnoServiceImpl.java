@@ -27,7 +27,7 @@ public class AlumnoServiceImpl implements AlumnoService{
 	}
 
 	@Override
-	public Optional<Alumno> buscaPorId(int idAlumno) {
+	public Optional<Alumno> buscarPorId(int idAlumno) {
 		return repository.findById(idAlumno);
 	}
 
@@ -37,13 +37,9 @@ public class AlumnoServiceImpl implements AlumnoService{
 	}
 
 	@Override
-	public List<Alumno> buscaPorDni(String dni) {
+	public List<Alumno> listaPorDni(String dni) {
 		return repository.findByDni(dni);
 	}
 
-
-	
-	
-	
 
 }

@@ -32,12 +32,12 @@ public class AlumnoController {
 		List<Alumno> lista = service.listaAlumno();
 		return ResponseEntity.ok(lista);
 	}
-	
+
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<Alumno> insertaAlumno(@RequestBody Alumno obj){
 		if (obj == null) {
-			return ResponseEntity.noContent().build();	
+			return ResponseEntity.badRequest().build();	
 		}else {
 			obj.setIdAlumno(0);
 			Alumno objSalida = service.insertaActualizaAlumno(obj);
@@ -49,56 +49,56 @@ public class AlumnoController {
 	@ResponseBody
 	public ResponseEntity<Alumno> actualizaAlumno(@RequestBody Alumno obj){
 		if (obj == null) {
-			return ResponseEntity.noContent().build();	
+			return ResponseEntity.badRequest().build();	
 		}else {
-			Optional<Alumno> optAlumno =   service.buscaPorId(obj.getIdAlumno());
-			if (optAlumno.isEmpty()) {
-				return ResponseEntity.noContent().build();	
+			Optional<Alumno> optAlumno = service.buscarPorId(obj.getIdAlumno());
+			if (optAlumno.isPresent()) {
+				Alumno objSalida =  service.insertaActualizaAlumno(obj);
+				return ResponseEntity.ok(objSalida);
 			}else {
-				Alumno objSalida = service.insertaActualizaAlumno(obj);
-				return ResponseEntity.ok(objSalida);	
+				return ResponseEntity.badRequest().build();
 			}
 		}
 	}
 	
-	@DeleteMapping("/{idParam}")
+	@DeleteMapping("/{paramId}")
 	@ResponseBody
-	public ResponseEntity<Alumno> eliminaAlumno(@PathVariable("idParam") Integer idAlumno){
-		Optional<Alumno> optAlumno =   service.buscaPorId(idAlumno);
-		if (optAlumno.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}else {
+	public ResponseEntity<Alumno> eliminaAlumno(@PathVariable("paramId") int idAlumno){
+		Optional<Alumno> optAlumno = service.buscarPorId(idAlumno);
+		if (optAlumno.isPresent()) {
 			service.eliminaPorId(idAlumno);
-			Optional<Alumno> optAlumnoEli =   service.buscaPorId(idAlumno);
-			if (optAlumnoEli.isEmpty()) {
-				return 	ResponseEntity.ok().build();
+			Optional<Alumno> optSalida = service.buscarPorId(idAlumno);
+			if (optSalida.isPresent()) {
+				return ResponseEntity.badRequest().build();
 			}else {
-				return ResponseEntity.internalServerError().build();
+				return ResponseEntity.ok(optAlumno.get());
 			}
-		}
-		
-	}
-	
-	@GetMapping("/{idParam}")
-	@ResponseBody
-	public ResponseEntity<Alumno> listaAlumnoPorId(@PathVariable("idParam") Integer idAlumno){
-		Optional<Alumno> optAlumno = service.buscaPorId(idAlumno);
-		if (optAlumno.isEmpty()) {
-			return ResponseEntity.noContent().build();
 		}else {
-			return ResponseEntity.ok(optAlumno.get());	
+			return ResponseEntity.badRequest().build();
 		}
 	}
 	
-	@GetMapping("/dni/{dniParam}")
+	@GetMapping("/id/{paramId}")
 	@ResponseBody
-	public ResponseEntity<List<Alumno>> listaAlumnoPorDni(@PathVariable("dniParam") String dni){
-		List<Alumno> lstAlumno = service.buscaPorDni(dni);
-		if (CollectionUtils.isEmpty(lstAlumno)) {
-			return ResponseEntity.noContent().build();
+	public ResponseEntity<Alumno> buscaPorId(@PathVariable("paramId") int idAlumno){
+		Optional<Alumno> optAlumno = service.buscarPorId(idAlumno);
+		if (optAlumno.isPresent()) {
+			return ResponseEntity.ok(optAlumno.get());
 		}else {
-			return ResponseEntity.ok(lstAlumno);	
+			return ResponseEntity.badRequest().build();
 		}
 	}
+
+	@GetMapping("/dni/{paramDni}")
+	@ResponseBody
+	public ResponseEntity<List<Alumno>> buscaPorDni(@PathVariable("paramDni") String dni){
+		List<Alumno> lista = service.listaPorDni(dni);
+		if (CollectionUtils.isEmpty(lista)) {
+			return ResponseEntity.badRequest().build();
+		}else {
+			return ResponseEntity.ok(lista);
+		}
+	}
+
 	
 }

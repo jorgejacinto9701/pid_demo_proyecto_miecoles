@@ -9,8 +9,8 @@ public interface AlumnoService {
 
 	public abstract List<Alumno> listaAlumno();
 	public abstract Alumno insertaActualizaAlumno(Alumno obj);
-	public abstract Optional<Alumno> buscaPorId(int idAlumno);
+	public Optional<Alumno> buscarPorId(int idAlumno);
 	public abstract void eliminaPorId(int idAlumno);
-	public abstract List<Alumno> buscaPorDni(String dni);
+	public abstract List<Alumno> listaPorDni(String dni);
 	
 }
