@@ -1,5 +1,5 @@
 package com.empresa.entity;
 
-public class ClaseOrtiz {
+public class ClaseOrtiz1 {
 
 }
